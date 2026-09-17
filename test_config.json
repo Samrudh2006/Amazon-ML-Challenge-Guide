@@ -1,0 +1,14 @@
+{
+    "id_column": "sample_index",
+    "image_column": "photo_url",
+    "target_column": "entity_value",
+    "text_columns": [
+        "product_title",
+        "product_description"
+    ],
+    "task_type": "ENTITY_EXTRACTION",
+    "recommended_loss": "CompositeMetricLoss(FocalLoss + LogCoshLoss)",
+    "train_csv_path": "test_entity_train.csv",
+    "test_csv_path": null,
+    "auto_configured": true
+}

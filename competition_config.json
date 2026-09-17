@@ -1,0 +1,11 @@
+{
+    "id_column": "sample_id",
+    "image_column": "image_link",
+    "target_column": "price",
+    "text_columns": [],
+    "task_type": "REGRESSION",
+    "recommended_loss": "DifferentiableSMAPELoss",
+    "train_csv_path": "mock_train.csv",
+    "test_csv_path": "mock_test.csv",
+    "auto_configured": true
+}

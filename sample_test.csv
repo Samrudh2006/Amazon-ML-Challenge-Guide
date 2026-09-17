@@ -1,0 +1,11 @@
+index,product_name,image_link
+1,Sample Product 1,https://picsum.photos/id/10/300/300.jpg
+2,Sample Product 2,https://picsum.photos/id/20/300/300.jpg
+3,Sample Product 3,https://picsum.photos/id/30/300/300.jpg
+4,Sample Product 4,https://picsum.photos/id/40/300/300.jpg
+5,Sample Product 5,https://picsum.photos/id/50/300/300.jpg
+6,Sample Product 6,https://picsum.photos/id/60/300/300.jpg
+7,Sample Product 7,https://picsum.photos/id/70/300/300.jpg
+8,Sample Product 8,https://picsum.photos/id/80/300/300.jpg
+9,Sample Product 9,https://picsum.photos/id/90/300/300.jpg
+10,Sample Product 10,https://picsum.photos/id/100/300/300.jpg

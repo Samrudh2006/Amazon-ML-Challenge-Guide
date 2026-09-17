@@ -1,0 +1,22 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Data & Image Caches (Large files)
+images/
+sample_images/
+catboost_info/
+models_cache/
+*.npy
+
+# Temporary files
+*.log
+.DS_Store
+Thumbs.db
