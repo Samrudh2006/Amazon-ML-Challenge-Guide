@@ -50,6 +50,36 @@ def find_optimal_blend_weights(y_true, oof_predictions_list):
     
     return best_weights, best_score
 
+def sanitize_model_outliers(predictions_list, y_train_ref=None):
+    """
+    SINGLE-MODEL DEFENSE SHIELD:
+    Protects the ensemble against a rogue model that outputs extreme wild predictions.
+    1. Bounds predictions within realistic catalog percentiles (e.g. 0.1% to 99.9% * 2.0).
+    2. Clips any individual model prediction that diverges > 4x from the cross-model median.
+    """
+    sanitized = []
+    min_bound = 1.0
+    max_bound = np.percentile(y_train_ref, 99.9) * 2.0 if y_train_ref is not None else 500000.0
+    
+    # Calculate cross-model median per sample
+    stacked = np.vstack(predictions_list) # shape: (n_models, n_samples)
+    model_median = np.median(stacked, axis=0) # shape: (n_samples,)
+    
+    for i, pred in enumerate(predictions_list):
+        p_clean = np.clip(pred, a_min=min_bound, a_max=max_bound)
+        # Pull extreme divergent predictions back toward cross-model consensus
+        divergence = p_clean / np.maximum(model_median, 1.0)
+        outlier_mask_high = divergence > 4.0
+        outlier_mask_low = divergence < 0.25
+        
+        if np.sum(outlier_mask_high) > 0 or np.sum(outlier_mask_low) > 0:
+            p_clean[outlier_mask_high] = model_median[outlier_mask_high] * 2.5
+            p_clean[outlier_mask_low] = model_median[outlier_mask_low] * 0.4
+            
+        sanitized.append(p_clean)
+        
+    return sanitized
+
 def blend_test_predictions(test_predictions_list, weights):
     """Applies optimal weights to test predictions"""
     blended_test = np.zeros_like(test_predictions_list[0])
@@ -84,6 +114,10 @@ def run_grandmaster_ensemble(y_true, oof_list, test_list, detected_mrp_test=None
     3. Packaging MRP Calibration
     4. Nelder-Mead Post-Processing Multiplier
     """
+    # 0. Sanitize rogue model predictions
+    oof_list = sanitize_model_outliers(oof_list, y_true)
+    test_list = sanitize_model_outliers(test_list, y_true)
+
     # 1. Optimal Weight Blending
     weights, blended_score = find_optimal_blend_weights(y_true, oof_list)
     blended_test = blend_test_predictions(test_list, weights)
@@ -106,8 +140,9 @@ def run_grandmaster_ensemble(y_true, oof_list, test_list, detected_mrp_test=None
         blended_test
     )
     
-    # 5. Floor clipping
-    calibrated_test = np.clip(calibrated_test, a_min=1.0, a_max=None)
+    # 5. Floor & Ceiling clipping
+    max_ceil = np.percentile(y_true, 99.9) * 2.0
+    calibrated_test = np.clip(calibrated_test, a_min=1.0, a_max=max_ceil)
     
     print(f"\n[GRANDMASTER ENSEMBLE COMPLETE] Final Calibrated OOF SMAPE: {final_oof_score:.3f}%")
     return calibrated_test

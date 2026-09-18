@@ -33,14 +33,18 @@ MODELS_ZOO = {
     # Tabular & GBDT Engines
     18: {"name": "CatBoost", "country": "Russia (Yandex)", "type": "GBDT (Symmetric)", "hf_id": "pip install catboost", "ram_gpu": "CPU Native / Fast"},
     19: {"name": "LightGBM", "country": "USA (Microsoft)", "type": "GBDT (Histogram)", "hf_id": "pip install lightgbm", "ram_gpu": "CPU Native / Ultra Fast"},
-    20: {"name": "FAISS / NearestNeighbors", "country": "USA (Meta)", "type": "Vector Search", "hf_id": "scikit-learn / faiss-cpu", "ram_gpu": "CPU Native / Milliseconds"}
+    20: {"name": "FAISS / NearestNeighbors", "country": "USA (Meta)", "type": "Vector Search", "hf_id": "scikit-learn / faiss-cpu", "ram_gpu": "CPU Native / Milliseconds"},
+
+    # Official Amazon Science & AWS Models
+    21: {"name": "Amazon Chronos (T5)", "country": "USA (Amazon Science)", "type": "Probabilistic Foundation", "hf_id": "amazon/chronos-t5-small", "ram_gpu": "2GB GPU / CPU"},
+    22: {"name": "Amazon AutoGluon", "country": "USA (Amazon AWS)", "type": "Multi-Layer Stacking", "hf_id": "autogluon.tabular", "ram_gpu": "CPU Native / Fast"}
 }
 
 def get_global_model_zoo():
     return MODELS_ZOO
 
 def verify_model_zoo_status():
-    return len(MODELS_ZOO) == 20
+    return len(MODELS_ZOO) >= 20
 
 def display_model_zoo():
     print("\n" + "="*85)
