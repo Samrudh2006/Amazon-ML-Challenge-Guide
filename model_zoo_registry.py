@@ -37,7 +37,12 @@ MODELS_ZOO = {
 
     # Official Amazon Science & AWS Models
     21: {"name": "Amazon Chronos (T5)", "country": "USA (Amazon Science)", "type": "Probabilistic Foundation", "hf_id": "amazon/chronos-t5-small", "ram_gpu": "2GB GPU / CPU"},
-    22: {"name": "Amazon AutoGluon", "country": "USA (Amazon AWS)", "type": "Multi-Layer Stacking", "hf_id": "autogluon.tabular", "ram_gpu": "CPU Native / Fast"}
+    22: {"name": "Amazon AutoGluon", "country": "USA (Amazon AWS)", "type": "Multi-Layer Stacking", "hf_id": "autogluon.tabular", "ram_gpu": "CPU Native / Fast"},
+
+    # Frontier Open-Source LLMs & VLMs (DeepSeek, GLM, Yi / 01.AI)
+    23: {"name": "DeepSeek-R1-Distill-1.5B", "country": "China (DeepSeek)", "type": "Reasoning LLM", "hf_id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B", "ram_gpu": "3GB RAM / CPU Friendly"},
+    24: {"name": "GLM-4V-9B", "country": "China (Zhipu AI / Tsinghua)", "type": "Multimodal VLM", "hf_id": "THUDM/glm-4v-9b", "ram_gpu": "16GB GPU (Kaggle T4)"},
+    25: {"name": "Yi-1.5-6B", "country": "China (01.AI)", "type": "Dense Text LLM", "hf_id": "01-ai/Yi-1.5-6B", "ram_gpu": "12GB GPU / 4-bit CPU"}
 }
 
 def get_global_model_zoo():
