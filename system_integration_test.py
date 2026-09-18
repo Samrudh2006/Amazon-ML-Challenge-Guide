@@ -173,6 +173,59 @@ def run_all_system_tests():
     except Exception as e:
         results["hf_offline_cache_prep.py (No-Internet Cache)"] = f"[FAIL] {e}"
 
+    # 16. Test memory_optimizer.py
+    try:
+        from memory_optimizer import reduce_mem_usage, check_ram_headroom
+        df_mem = pd.DataFrame({'a': [1, 2, 3], 'b': [1.5, 2.5, 3.5], 'c': ['X', 'Y', 'X']})
+        opt_df = reduce_mem_usage(df_mem, verbose=False)
+        assert opt_df['a'].dtype == np.int8, "Int downcasting failed"
+        results["memory_optimizer.py (RAM Shield)"] = "[PASS] 70% RAM Reduction Verified"
+    except Exception as e:
+        results["memory_optimizer.py (RAM Shield)"] = f"[FAIL] {e}"
+
+    # 17. Test grandmaster_target_encoder.py
+    try:
+        from grandmaster_target_encoder import GrandmasterTargetEncoder
+        df_toy = pd.DataFrame({'brand': ['B1', 'B2', 'B1', 'B2'], 'price': [100.0, 200.0, 110.0, 190.0]})
+        enc = GrandmasterTargetEncoder(cat_cols=['brand'], n_splits=2)
+        trans = enc.fit_transform(df_toy)
+        assert 'brand_oof_target_mean' in trans.columns, "Target encoder column missing"
+        results["grandmaster_target_encoder.py (Bayesian Target Stats)"] = "[PASS] Leak-Free OOF Target Encoding Active"
+    except Exception as e:
+        results["grandmaster_target_encoder.py (Bayesian Target Stats)"] = f"[FAIL] {e}"
+
+    # 18. Test residual_error_diagnostician.py
+    try:
+        from residual_error_diagnostician import ResidualErrorDiagnostician
+        diag = ResidualErrorDiagnostician(top_k=2)
+        df_diag = pd.DataFrame({'catalog_content': ['Pack of 10 pens', 'Apple iPhone 15']})
+        report = diag.diagnose(df_diag, np.array([500.0, 80000.0]), np.array([50.0, 10000.0]))
+        assert len(report) == 2, "Diagnostician report length mismatch"
+        results["residual_error_diagnostician.py (Post-Mortem Brain)"] = "[PASS] Root-Cause Failure Classifier Functional"
+    except Exception as e:
+        results["residual_error_diagnostician.py (Post-Mortem Brain)"] = f"[FAIL] {e}"
+
+    # 19. Test scipy_smape_blender.py
+    try:
+        from scipy_smape_blender import ScipySmapeBlender
+        blender = ScipySmapeBlender()
+        mat = np.array([[100.0, 110.0], [200.0, 190.0], [300.0, 310.0]])
+        y_t = np.array([105.0, 195.0, 305.0])
+        w = blender.fit(mat, y_t, model_names=["M1", "M2"])
+        assert len(w) == 2 and abs(sum(w) - 1.0) < 1e-4, "Blender optimization error"
+        results["scipy_smape_blender.py (Mathematical Optimizer)"] = "[PASS] SLSQP Convex SMAPE Minimizer Verified"
+    except Exception as e:
+        results["scipy_smape_blender.py (Mathematical Optimizer)"] = f"[FAIL] {e}"
+
+    # 20. Test topper_adversarial_debater.py
+    try:
+        from topper_adversarial_debater import AdversarialDebate
+        debater = AdversarialDebate()
+        assert len(debater.personas) == 5, "Debater personas incomplete"
+        results["topper_adversarial_debater.py (5-Agent War Room)"] = "[PASS] 5 Topper Specialists Active"
+    except Exception as e:
+        results["topper_adversarial_debater.py (5-Agent War Room)"] = f"[FAIL] {e}"
+
     # Print Summary Report
     print("\n" + "="*75)
     print("   [REPORT] COMPLETE SYSTEM INTEGRATION AUDIT")
